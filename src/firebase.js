@@ -1,18 +1,24 @@
-import {initializeApp} from "firebase/app";
-import {getAuth} from "firebase/auth";
-import {getFirestore} from "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
+// Firebase configuration object
 const firebaseConfig = {
-    apiKey: "AIzaSyDM9w-pNY4QH5b-4ytGM7ikezn6c2ahRsc",
-    authDomain: "netflix-clone-1432c.firebaseapp.com",
-    projectId: "netflix-clone-1432c",
-    storageBucket: "netflix-clone-1432c.appspot.com",
-    messagingSenderId: "65178048230",
-    appId: "1:65178048230:web:c9fe0a8f78f2ce636bcd27"
-  };
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
 
-  const app = initializeApp(firebaseConfig)
-  const auth = getAuth()
-  const db = getFirestore()
 
-  export {app,auth,db}
+// Initialize Firebase app
+const app = initializeApp(firebaseConfig);
+
+// Get Firebase Authentication and Firestore instances
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Export the Firebase app, auth, and firestore instances
+export { app, auth, db };
