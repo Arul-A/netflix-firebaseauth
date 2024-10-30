@@ -1,29 +1,32 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { doc, setDoc } from 'firebase/firestore';
 
 const Sign_In = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const register = (e) => {
+  const register = async (e) => {
     e.preventDefault();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((authUser) => {
-        console.log(authUser)
+    try {
+        const authUser = await createUserWithEmailAndPassword(auth, email, password);
+        await setDoc(doc(db,'users',authUser.user.uid),{
+          favShows:[],
+          currentPlan:null,
+          renewalDate:null,
+        })
         setEmail('')
         setPassword('')
-      })
-      .catch((err) => {
+      }catch(err) {
         alert(err.message)
-      })
+      }
   }
 
   const signin = (e) => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then((authUser) => {
-        console.log(authUser)
         setEmail('')
         setPassword('')
       })
