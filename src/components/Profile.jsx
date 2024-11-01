@@ -19,8 +19,22 @@ const Profile = () => {
 
       if (userDoc.exists()) {
         const data = userDoc.data();
-        setCurrentPlan(data.plan || '');
-        setRenewalDate(data.renewalDate || 'No Active Subscription');
+        const renewal = data.renewalDate ? new Date(data.renewalDate) : null;
+        const today = new Date();
+
+        if(renewal){
+          if(renewal.toDateString().today/toDateString()){
+            setRenewalDate('Your plan will expire today')
+          } else if(renewal < today){
+            setRenewalDate('No Active Subscription')
+            await updateDoc(userRef,{plan:'', renewalDate:null});
+          } else {
+            setCurrentPlan(data.plan || '');
+            setRenewalDate(renewal.toLocaleDateString());
+          }
+        } else {
+          setRenewalDate('No Active subscription') 
+        }
       }
     };
     fetchUserData();

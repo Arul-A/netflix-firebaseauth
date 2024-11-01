@@ -13,7 +13,7 @@ const Sign_In = () => {
         const authUser = await createUserWithEmailAndPassword(auth, email, password);
         await setDoc(doc(db,'users',authUser.user.uid),{
           favShows:[],
-          currentPlan:null,
+          plan:null,
           renewalDate:null,
         })
         setEmail('')
