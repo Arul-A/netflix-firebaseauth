@@ -34,8 +34,7 @@ const Profile = () => {
     await updateDoc(userRef, {
       plan: newPlan,
       renewalDate: newRenewalDate.toLocaleDateString(), // Format as needed
-    });
-
+    })
     setCurrentPlan(newPlan);
     setRenewalDate(newRenewalDate.toLocaleDateString());
   };
@@ -43,6 +42,7 @@ const Profile = () => {
   const logout = () => {
     signOut(auth);
   };
+  console.log(currentPlan)
 
   return (
     <div className='bg-[#000] h-screen flex flex-col items-center justify-center text-[#fff]'>
@@ -60,9 +60,9 @@ const Profile = () => {
             </div>
             <div>
               <p className='py-1'>Renewal Date: {renewalDate}</p>
-              <div className='p-4 flex flex-col gap-3'>
-                {[{'plan':'Premium','cost':'₹399/Month'}, {'plan':'Standard','cost':'₹299/Month'}, {'plan':'Premium','cost':'₹199/Month'}].map(data => (
-                  <div className='flex gap-3 items-center' key={data.plan}>
+              <div className='p-4 flex flex-col gap-5'>
+                {[{'plan':'Premium','cost':'₹399/Month'}, {'plan':'Standard','cost':'₹299/Month'}, {'plan':'Basic','cost':'₹199/Month'}].map(data => (
+                  <div className='flex justify-between items-center' key={data.plan}>
                     <div>
                       <p className='text-sm'>{data.plan} - {data.cost}</p>
                       <p className='text-xs'>{data.plan === 'Premium' ? '4k + HDR & upto 4 devices' : data.plan === 'Standard' ? '1080p & upto 2 devices' : '720p & 1 device only'}</p>
