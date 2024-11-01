@@ -14,6 +14,8 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      if (!auth.currentUser) return;
+
       const userRef = doc(db, 'users', auth.currentUser.uid);
       const userDoc = await getDoc(userRef);
 
@@ -22,41 +24,52 @@ const Profile = () => {
         const renewal = data.renewalDate ? new Date(data.renewalDate) : null;
         const today = new Date();
 
-        if(renewal){
-          if(renewal.toDateString() === today.toDateString()){
-            setRenewalDate('Your plan will expire today')
-          } else if(renewal < today){
-            setRenewalDate('No Active Subscription')
-            await updateDoc(userRef,{plan:'', renewalDate:null});
+        if (renewal) {
+          if (renewal.toDateString() === today.toDateString()) {
+            setRenewalDate('Your plan will expire today');
+          } else if (renewal < today) {
+            await updateDoc(userRef, { plan: null, renewalDate: null });
+            setRenewalDate('No Active Subscription');
+            setCurrentPlan('');
           } else {
             setCurrentPlan(data.plan || '');
             setRenewalDate(renewal.toLocaleDateString());
           }
         } else {
-          setRenewalDate('No Active subscription') 
+          setRenewalDate('No Active Subscription');
+          setCurrentPlan('');
         }
+      } else {
+        setRenewalDate('No Active Subscription');
+        setCurrentPlan('');
       }
     };
+
     fetchUserData();
   }, []);
 
   const updatePlan = async (newPlan) => {
+    if(currentPlan){
+      alert("you're already have a subscription")
+      return
+    }
     const userRef = doc(db, 'users', auth.currentUser.uid);
     const newRenewalDate = new Date();
     newRenewalDate.setDate(newRenewalDate.getDate() + 30); // Set renewal date to 30 days from now
 
     await updateDoc(userRef, {
       plan: newPlan,
-      renewalDate: newRenewalDate.toLocaleDateString(), // Format as needed
-    })
+      renewalDate: newRenewalDate.toISOString(), // Use ISO format for better compatibility
+    });
+
     setCurrentPlan(newPlan);
     setRenewalDate(newRenewalDate.toLocaleDateString());
+    alert(`Congratulation, You're ${newPlan} plan activated`)
   };
 
   const logout = () => {
     signOut(auth);
   };
-  console.log(currentPlan)
 
   return (
     <div className='bg-[#000] h-screen flex flex-col items-center justify-center text-[#fff]'>
@@ -79,7 +92,7 @@ const Profile = () => {
                   <div className='flex justify-between items-center' key={data.plan}>
                     <div>
                       <p className='text-sm'>{data.plan} - {data.cost}</p>
-                      <p className='text-xs'>{data.plan === 'Premium' ? '4k + HDR & upto 4 devices' : data.plan === 'Standard' ? '1080p & upto 2 devices' : '720p & 1 device only'}</p>
+                      <p className='text-xs'>{data.plan === 'Premium' ? '4k + HDR & up to 4 devices' : data.plan === 'Standard' ? '1080p & up to 2 devices' : '720p & 1 device only'}</p>
                     </div>
                     <div>
                       {currentPlan === data.plan ? (
