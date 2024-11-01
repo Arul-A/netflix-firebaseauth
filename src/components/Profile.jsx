@@ -23,7 +23,7 @@ const Profile = () => {
         const today = new Date();
 
         if(renewal){
-          if(renewal.toDateString().today/toDateString()){
+          if(renewal.toDateString() === today.toDateString()){
             setRenewalDate('Your plan will expire today')
           } else if(renewal < today){
             setRenewalDate('No Active Subscription')
