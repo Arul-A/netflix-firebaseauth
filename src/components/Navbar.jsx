@@ -29,7 +29,7 @@ const Navbar = () => {
             <img src={netflix} alt="netflix-logo" className='w-[100px] h-[50px] object-contain ml-5 cursor-pointer' />
         </Link>
         <Link to='/profile'>
-          <img src={profile} alt="profile" className='w-[50px] h-[35px] object-contain mr-5 cursor-pointer' />
+          <img src={profile} title='profile'alt="profile" className='w-[50px] h-[35px] object-contain mr-5 cursor-pointer' />
         </Link>
       </div>
     </nav>
